@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'portfolio',
     'corsheaders',
     'users',
+    'stocks',
 ]
 
 MIDDLEWARE = [

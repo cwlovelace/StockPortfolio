@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:14 as build
+FROM node:14 AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -13,5 +13,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY webserver/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+
+
 
 
