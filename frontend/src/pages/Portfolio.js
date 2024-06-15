@@ -103,6 +103,7 @@ const Portfolio = () => {
       });
       setNewStock('');
       setNewQuantity(0);
+      window.location.reload();
     } catch (error) {
       console.error('Error adding stock to portfolio', error);
       if (error.response && error.response.status === 401) {
@@ -170,14 +171,15 @@ const Portfolio = () => {
     });
   };
 
-  const calculateTotalValue = portfolio => {
-    return portfolio.stocks.reduce((total, stock) => {
+  const calculateTotalValue = (portfolio) => {
+    const totalValue = portfolio.stocks.reduce((total, stock) => {
       return total + stock.quantity * stock.stock.price;
     }, 0);
+    return totalValue.toFixed(2);
   };
 
   return (
-    <div>
+    <div className="main-container">
       <h1>{username}'s Portfolios</h1>
       <PortfolioList portfolios={portfolios} onSelect={setSelectedPortfolio} onDelete={deletePortfolio} />
       <PortfolioForm onSubmit={addPortfolio} />

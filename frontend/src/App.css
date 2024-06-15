@@ -85,3 +85,10 @@ h1 {
   }
 }
 
+/* New class for the main content */
+.main-container {
+  margin-left: 10%;
+  width: 80%;
+}
+
+

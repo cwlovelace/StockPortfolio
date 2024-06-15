@@ -53,3 +53,10 @@
     border-top: 1px solid #ccc;
     text-align: center;
   }
+  
+  /* New class for the main content */
+  .main-container {
+    margin-left: 10%;
+    width: 80%;
+  }
+  
