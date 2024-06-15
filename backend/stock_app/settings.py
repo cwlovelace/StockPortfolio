@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-gya4wgl*m8v(j087c8*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['your-ec2-public-dns', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['18.190.51.207', 'localhost', '127.0.0.1']
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
