@@ -15,7 +15,7 @@ class Portfolio(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='portfolios')
     name = models.CharField(max_length=255)
     stocks = models.ManyToManyField(Stock, through='PortfolioStock')
-    # created_at = models.DateTimeField(auto_now_add=True)
+    # created_at = models.DateTimeField(auto_now_add=True) <-- removed due to time constraints
 
     def __str__(self):
         return f"Portfolio of {self.user.username} - {self.name}"

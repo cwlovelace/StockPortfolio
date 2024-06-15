@@ -6,7 +6,7 @@ import PortfolioList from '../components/PortfolioList';
 import PortfolioForm from '../components/PortfolioForm';
 import StockForm from '../components/StockForm';
 import StockList from '../components/StockList';
-import './Auth.css'; // Assuming you have this file for styling
+import './Auth.css';
 
 const Portfolio = () => {
   const { username } = useParams();
@@ -17,12 +17,13 @@ const Portfolio = () => {
   const [editQuantity, setEditQuantity] = useState({});
   const navigate = useNavigate();
 
-  // Hardcoded list of stock symbols
+  // Hardcoded list of stock symbols - used to avoid issue with StockList from backend.
   const stocks = [
     "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", 
     "FB", "NVDA", "BRK-B", "JPM", "JNJ"
   ];
 
+  // authenticate and display portfolios
   useEffect(() => {
     const fetchPortfolios = async () => {
       try {
@@ -47,6 +48,7 @@ const Portfolio = () => {
     fetchPortfolios();
   }, [username, navigate]);
 
+// add portfolio
   const addPortfolio = async (name) => {
     try {
       const token = localStorage.getItem('token');
@@ -64,6 +66,7 @@ const Portfolio = () => {
     }
   };
 
+  // delete portfolio
   const deletePortfolio = async (id) => {
     try {
       const token = localStorage.getItem('token');
@@ -101,9 +104,9 @@ const Portfolio = () => {
         ...selectedPortfolio,
         stocks: [...selectedPortfolio.stocks, response.data],
       });
-      setNewStock('');
-      setNewQuantity(0);
-      window.location.reload();
+      setNewStock(''); // set back to default
+      setNewQuantity(0); // set back to default
+      window.location.reload(); // required to show new stock quantity
     } catch (error) {
       console.error('Error adding stock to portfolio', error);
       if (error.response && error.response.status === 401) {

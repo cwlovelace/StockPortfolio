@@ -8,5 +8,5 @@ class StockSerializer(serializers.ModelSerializer):
         model = Stock
         fields = ['id', 'symbol', 'name', 'price']
 
-class StockListSerializer(serializers.Serializer):
+class StockListSerializer(serializers.Serializer): # created separate serializer for list due to issues. Unable to resolve.
     stocks = StockSerializer(many=True)

@@ -1,4 +1,5 @@
 # backend/portfolio/management/commands/populate_stocks.py
+# This script populates the database with a handful of stocks for the app to use.
 
 from django.core.management.base import BaseCommand
 from portfolio.models import Stock

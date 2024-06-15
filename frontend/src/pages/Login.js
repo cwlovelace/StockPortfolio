@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
-
+// add weather functionality
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -27,12 +27,13 @@ const Login = () => {
     fetchWeather();
   }, []);
 
+  // on submit of login info set token and username in local storage and navigate forward. Currently requires refresh and resubmission. Must troubleshoot.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await API.post('/login/', { username, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', username); // Store the username
+      localStorage.setItem('token', response.data.token); // Store token
+      localStorage.setItem('username', username); // Store username
       navigate(`/portfolio/${username}`);
     } catch (error) {
       console.error('Error logging in', error);

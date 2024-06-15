@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import API from '../services/api';
-import './Auth.css'; // Assuming you will create this file for styling
+import './Auth.css';
 
 const Register = () => {
   const [username, setUsername] = useState('');

@@ -52,8 +52,8 @@ class PortfolioStockUpdate(generics.UpdateAPIView):
         return PortfolioStock.objects.filter(portfolio__user=self.request.user)
 
     def update(self, request, *args, **kwargs):
-        print(f"Request data: {request.data}")  # Debugging statement
-        print(f"URL kwargs: {kwargs}")  # Debugging statement
+        print(f"Request data: {request.data}")  # Added to help debug
+        print(f"URL kwargs: {kwargs}")  # Added to help debug
         
         partial = kwargs.pop('partial', False)
         instance = self.get_object()

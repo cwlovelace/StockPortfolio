@@ -6,15 +6,18 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import './App.css';
 
-const App = () => {
+//establish authentication based on stored tokens
+const App = () => { 
   const token = localStorage.getItem('token');
   const username = localStorage.getItem('username');
   const isAuthenticated = !!token;
 
+  // report authentication status for debugging
   console.log('Token:', token);
   console.log('Username:', username);
   console.log('Is authenticated:', isAuthenticated);
 
+  // un-authenticate on logout or flag authenticated on login and proceed to portfolio
   return (
     <Router>
       <div className="header">

@@ -16,13 +16,13 @@ class PortfolioStockSerializer(serializers.ModelSerializer):
         model = PortfolioStock
         fields = ['id', 'stock_symbol', 'quantity', 'stock']
 
-    def create(self, validated_data):
+    def create(self, validated_data): # add stock by symbol
         stock_symbol = validated_data.pop('stock_symbol')
         stock = Stock.objects.get(symbol=stock_symbol)
         portfolio_stock = PortfolioStock.objects.create(stock=stock, **validated_data)
         return portfolio_stock
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data): # update stock by symbol
         if 'stock_symbol' in validated_data:
             stock_symbol = validated_data.pop('stock_symbol')
             stock = Stock.objects.get(symbol=stock_symbol)

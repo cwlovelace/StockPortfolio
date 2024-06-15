@@ -22,7 +22,7 @@ class StockList(generics.ListAPIView):
         logger.debug(f"Serialized response in StockList: {serializer.data}")
         return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['GET']) # used decorators to troubleshoot StockList not working with serializer. Gave up.
 def test_stocks(request):
     stocks = Stock.objects.all()
     logger.debug(f"Stocks from DB in test_stocks: {stocks}")

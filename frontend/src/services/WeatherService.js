@@ -1,4 +1,6 @@
 // frontend/src/services/WeatherService.js
+// added to fulfill second API requirement
+
 import axios from 'axios';
 
 export const getLocation = async () => {
@@ -11,6 +13,7 @@ export const getWeather = async (lat, lon) => {
     return response.data.current_weather;
 };
 
+// codes provided by API, integrated into app via LLM.
 export const weatherCodeToDescription = (code) => {
     const weatherDescriptions = {
         0: 'Clear sky',
