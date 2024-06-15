@@ -1,21 +1,21 @@
-// frontend/src/pages/Login.js
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import API from '../services/api';
-import './Auth.css'; // Assuming you will create this file for styling
+import './Auth.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await API.post('/login/', { username, password });
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('username', username);  // Store username for future use
       navigate(`/portfolio/${username}`);
     } catch (error) {
       console.error('Error logging in', error);
@@ -43,6 +43,9 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
 
 
 

@@ -7,3 +7,6 @@ class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stock
         fields = ['id', 'symbol', 'name', 'price']
+
+class StockListSerializer(serializers.Serializer):
+    stocks = StockSerializer(many=True)

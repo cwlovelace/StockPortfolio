@@ -1,4 +1,4 @@
-## backend/portfolio/views.py
+# backend/portfolio/views.py
 
 from rest_framework import generics, permissions
 from rest_framework.response import Response
@@ -32,17 +32,17 @@ class PortfolioStockCreate(generics.CreateAPIView):
             portfolio = Portfolio.objects.get(id=portfolio_id, user=self.request.user)
         except Portfolio.DoesNotExist:
             return Response({'error': 'Portfolio not found or does not belong to you.'}, status=404)
-        
-        stock_id = serializer.validated_data.get('stock_id')  # Changed 'stock' to 'stock_id'
+
+        stock_symbol = serializer.validated_data.get('stock_symbol')
         try:
-            stock = Stock.objects.get(id=stock_id.id)  # Added '.id'
+            stock = Stock.objects.get(symbol=stock_symbol)
         except Stock.DoesNotExist:
             return Response({'error': 'Stock not found.'}, status=404)
-        
+
         quantity = serializer.validated_data.get('quantity')
-        
-        PortfolioStock.objects.create(portfolio=portfolio, stock=stock, quantity=quantity)
-        return Response({'status': 'stock added'}, status=201)  # Added response
+
+        portfolio_stock = PortfolioStock.objects.create(portfolio=portfolio, stock=stock, quantity=quantity)
+        return Response(PortfolioStockSerializer(portfolio_stock).data, status=201)
 
 class PortfolioStockUpdate(generics.UpdateAPIView):
     serializer_class = PortfolioStockSerializer
@@ -57,4 +57,9 @@ class PortfolioStockDelete(generics.DestroyAPIView):
 
     def get_queryset(self):
         return PortfolioStock.objects.filter(portfolio__user=self.request.user)
+
+
+
+
+
 

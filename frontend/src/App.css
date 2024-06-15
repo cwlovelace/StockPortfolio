@@ -1,3 +1,40 @@
+/* Global styles for your app */
+body {
+  background-color: #002244; /* Dark blue background */
+  color: #CCCCCC; /* Gray text */
+  font-family: Arial, sans-serif; /* Ensure you have a readable font */
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #CCCCCC; /* Ensure links are also gray */
+}
+
+button {
+  background-color: #004488; /* Darker blue for buttons */
+  color: #CCCCCC; /* Gray text on buttons */
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0055aa; /* Slightly lighter blue on hover */
+}
+
+input, textarea {
+  background-color: #003366; /* Dark blue input fields */
+  color: #CCCCCC; /* Gray text in input fields */
+  border: 1px solid #0055aa;
+  padding: 10px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #FFFFFF; /* White headings for better contrast */
+}
+
+/* Existing styles */
 .App {
   text-align: center;
 }
@@ -28,6 +65,17 @@
   color: #61dafb;
 }
 
+.header {
+  text-align: center;
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+h1 {
+  margin: 0;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,3 +84,4 @@
     transform: rotate(360deg);
   }
 }
+

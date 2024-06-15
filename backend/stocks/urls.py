@@ -1,10 +1,12 @@
 # backend/stocks/urls.py
 
 from django.urls import path
-from . import views
+from .views import StockList, test_stocks
 
 urlpatterns = [
-    path('', views.StockList.as_view(), name='stock-list'),
+    path('stocks/', StockList.as_view(), name='stock-list'),
+    path('test_stocks/', test_stocks, name='test-stocks'),
 ]
+
 
 

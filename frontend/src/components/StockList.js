@@ -1,32 +1,34 @@
 // frontend/src/components/StockList.js
-
 import React, { useState } from 'react';
 
 const StockList = ({ stocks, onUpdateQuantity }) => {
-  const [editQuantity, setEditQuantity] = useState(null);
-  const [newQuantity, setNewQuantity] = useState(0);
+  const [editingStockId, setEditingStockId] = useState(null);
+  const [quantity, setQuantity] = useState(0);
 
-  const handleUpdateQuantity = (id, quantity) => {
-    onUpdateQuantity(id, quantity);
-    setEditQuantity(null);  // Clear edit state after update
+  const handleEditClick = (stock) => {
+    setEditingStockId(stock.id);
+    setQuantity(stock.quantity);
+  };
+
+  const handleUpdateClick = () => {
+    onUpdateQuantity(editingStockId, quantity);
+    setEditingStockId(null);
   };
 
   return (
     <ul>
-      {stocks.map(stock => (
+      {stocks.map((stock) => (
         <li key={stock.id}>
-          {stock.stock.name} ({stock.stock.symbol}) - Quantity: {stock.quantity}
-          <button onClick={() => setEditQuantity(stock.id)}>Edit</button>
-          <span>Total Value: ${stock.quantity * stock.stock.price}</span>
-          {editQuantity === stock.id && (
+          {stock.stock.name} ({stock.stock.symbol}) - Quantity: {stock.quantity} - Total Value: ${(stock.quantity * stock.stock.price).toFixed(2)}
+          <button onClick={() => handleEditClick(stock)}>Edit</button>
+          {editingStockId === stock.id && (
             <div>
               <input
                 type="number"
-                placeholder="New Quantity"
-                value={newQuantity}
-                onChange={(e) => setNewQuantity(Number(e.target.value))}
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
               />
-              <button onClick={() => handleUpdateQuantity(stock.id, newQuantity)}>Update</button>
+              <button onClick={handleUpdateClick}>Update</button>
             </div>
           )}
         </li>
@@ -36,4 +38,5 @@ const StockList = ({ stocks, onUpdateQuantity }) => {
 };
 
 export default StockList;
+
 

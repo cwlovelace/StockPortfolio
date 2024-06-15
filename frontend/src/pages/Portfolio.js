@@ -1,23 +1,26 @@
-// frontend/src/pages/Portfolio.js
-
+// Portfolio.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
-import Autosuggest from 'react-autosuggest';
 import PortfolioList from '../components/PortfolioList';
 import PortfolioForm from '../components/PortfolioForm';
 import StockForm from '../components/StockForm';
 import StockList from '../components/StockList';
+import './Auth.css'; // Assuming you have this file for styling
 
 const Portfolio = () => {
   const { username } = useParams();
   const [portfolios, setPortfolios] = useState([]);
-  const [stocks, setStocks] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
   const [selectedPortfolio, setSelectedPortfolio] = useState(null);
   const [newStock, setNewStock] = useState('');
   const [newQuantity, setNewQuantity] = useState(0);
   const navigate = useNavigate();
+
+  // Hardcoded list of stock symbols
+  const stocks = [
+    "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", 
+    "FB", "NVDA", "BRK-B", "JPM", "JNJ"
+  ];
 
   useEffect(() => {
     const fetchPortfolios = async () => {
@@ -40,22 +43,7 @@ const Portfolio = () => {
       }
     };
 
-    const fetchStocks = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await API.get('/stocks/', {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
-        setStocks(response.data);
-      } catch (error) {
-        console.error('Error fetching stocks', error);
-      }
-    };
-
     fetchPortfolios();
-    fetchStocks();
   }, [username, navigate]);
 
   const addPortfolio = async (name) => {
@@ -95,13 +83,13 @@ const Portfolio = () => {
   const addStockToPortfolio = async () => {
     try {
       const token = localStorage.getItem('token');
-      const stock = stocks.find(stock => stock.symbol.toLowerCase() === newStock.toLowerCase());
-      if (!stock) {
-        console.error('Stock not found');
+      const stockSymbol = newStock.toUpperCase();
+      if (!stocks.includes(stockSymbol)) {
+        console.error('Stock not found in the list');
         return;
       }
       const response = await API.post(`/portfolios/${selectedPortfolio.id}/add_stock/`, {
-        stock_id: stock.id,
+        stock_symbol: stockSymbol,
         quantity: newQuantity,
       }, {
         headers: {
@@ -146,30 +134,6 @@ const Portfolio = () => {
     }
   };
 
-  const getStockSuggestions = value => {
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-    return inputLength === 0 ? [] : stocks.filter(stock =>
-      stock.symbol.toLowerCase().slice(0, inputLength) === inputValue
-    );
-  };
-
-  const onSuggestionsFetchRequested = ({ value }) => {
-    setSuggestions(getStockSuggestions(value));
-  };
-
-  const onSuggestionsClearRequested = () => {
-    setSuggestions([]);
-  };
-
-  const getSuggestionValue = suggestion => suggestion.symbol;
-
-  const renderSuggestion = suggestion => (
-    <div>
-      {suggestion.symbol} - {suggestion.name}
-    </div>
-  );
-
   const calculateTotalValue = portfolio => {
     return portfolio.stocks.reduce((total, stock) => {
       return total + stock.quantity * stock.stock.price;
@@ -189,17 +153,12 @@ const Portfolio = () => {
             onUpdateQuantity={updateStockQuantity}
           />
           <StockForm
-            stockSuggestions={suggestions}
+            stocks={stocks}
             newStock={newStock}
             setNewStock={setNewStock}
             newQuantity={newQuantity}
             setNewQuantity={setNewQuantity}
             onAddStock={addStockToPortfolio}
-            getStockSuggestions={getStockSuggestions}
-            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={onSuggestionsClearRequested}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestion={renderSuggestion}
           />
           <h3>Portfolio Total Value: ${calculateTotalValue(selectedPortfolio)}</h3>
         </div>
@@ -209,3 +168,6 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
+
+
+
