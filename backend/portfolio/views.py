@@ -51,12 +51,36 @@ class PortfolioStockUpdate(generics.UpdateAPIView):
     def get_queryset(self):
         return PortfolioStock.objects.filter(portfolio__user=self.request.user)
 
+    def update(self, request, *args, **kwargs):
+        print(f"Request data: {request.data}")  # Debugging statement
+        print(f"URL kwargs: {kwargs}")  # Debugging statement
+        
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        stock_symbol = request.data.get('stock_symbol', instance.stock.symbol)
+        quantity = request.data.get('quantity', instance.quantity)
+
+        try:
+            stock = Stock.objects.get(symbol=stock_symbol)
+        except Stock.DoesNotExist:
+            return Response({'error': 'Stock not found.'}, status=404)
+
+        data = {'stock_symbol': stock_symbol, 'quantity': quantity}
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+
 class PortfolioStockDelete(generics.DestroyAPIView):
     serializer_class = PortfolioStockSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return PortfolioStock.objects.filter(portfolio__user=self.request.user)
+
 
 
 

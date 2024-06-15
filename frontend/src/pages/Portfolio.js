@@ -14,6 +14,7 @@ const Portfolio = () => {
   const [selectedPortfolio, setSelectedPortfolio] = useState(null);
   const [newStock, setNewStock] = useState('');
   const [newQuantity, setNewQuantity] = useState(0);
+  const [editQuantity, setEditQuantity] = useState({});
   const navigate = useNavigate();
 
   // Hardcoded list of stock symbols
@@ -110,28 +111,43 @@ const Portfolio = () => {
     }
   };
 
-  const updateStockQuantity = async (portfolioStockId, newQuantity) => {
+  const updateStockQuantity = async (portfolioStockId) => {
     try {
-      const token = localStorage.getItem('token');
-      await API.put(`/portfolios/${selectedPortfolio.id}/update_stock/${portfolioStockId}/`, {
-        quantity: newQuantity,
-      }, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      });
-      setSelectedPortfolio({
-        ...selectedPortfolio,
-        stocks: selectedPortfolio.stocks.map(stock =>
-          stock.id === portfolioStockId ? { ...stock, quantity: newQuantity } : stock
-        ),
-      });
+        const token = localStorage.getItem('token');
+        const newQuantityValue = editQuantity[portfolioStockId] || 0;
+        const stock = selectedPortfolio.stocks.find(stock => stock.id === portfolioStockId);
+        
+        await API.put(`/portfolios/${selectedPortfolio.id}/update_stock/${portfolioStockId}/`, {
+            stock_symbol: stock.stock.symbol,  // Ensure the stock symbol is sent
+            quantity: newQuantityValue,
+        }, {
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        });
+        setSelectedPortfolio({
+            ...selectedPortfolio,
+            stocks: selectedPortfolio.stocks.map(stock =>
+                stock.id === portfolioStockId ? { ...stock, quantity: newQuantityValue } : stock
+            ),
+        });
+        setEditQuantity({
+            ...editQuantity,
+            [portfolioStockId]: 0
+        });
     } catch (error) {
-      console.error('Error updating stock quantity', error);
-      if (error.response && error.response.status === 401) {
-        navigate('/login');
-      }
+        console.error('Error updating stock quantity', error);
+        if (error.response && error.response.status === 401) {
+            navigate('/login');
+        }
     }
+};
+
+  const handleEditQuantityChange = (portfolioStockId, value) => {
+    setEditQuantity({
+      ...editQuantity,
+      [portfolioStockId]: value,
+    });
   };
 
   const calculateTotalValue = portfolio => {
@@ -151,6 +167,8 @@ const Portfolio = () => {
           <StockList
             stocks={selectedPortfolio.stocks}
             onUpdateQuantity={updateStockQuantity}
+            onEditQuantityChange={handleEditQuantityChange}
+            editQuantity={editQuantity}
           />
           <StockForm
             stocks={stocks}
@@ -168,6 +186,8 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
+
+
 
 
 
