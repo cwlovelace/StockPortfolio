@@ -1,7 +1,7 @@
 // frontend/src/components/StockList.js
 import React, { useState } from 'react';
 
-const StockList = ({ stocks, onUpdateQuantity, onEditQuantityChange, editQuantity }) => {
+const StockList = ({ stocks, onUpdateQuantity, onEditQuantityChange, editQuantity, onDeleteStock }) => {
   const [editingStockId, setEditingStockId] = useState(null);
 
   const handleEditClick = (stockId) => {
@@ -29,7 +29,10 @@ const StockList = ({ stocks, onUpdateQuantity, onEditQuantityChange, editQuantit
                 <button onClick={() => handleUpdateClick(portfolioStock.id)}>Update</button>
               </div>
             ) : (
-              <button onClick={() => handleEditClick(portfolioStock.id)}>Edit</button>
+              <div>
+                <button onClick={() => handleEditClick(portfolioStock.id)}>Edit</button>
+                <button onClick={() => onDeleteStock(portfolioStock.id)}>Delete</button>
+              </div>
             )}
           </li>
         ))}
@@ -39,6 +42,7 @@ const StockList = ({ stocks, onUpdateQuantity, onEditQuantityChange, editQuantit
 };
 
 export default StockList;
+
 
 
 

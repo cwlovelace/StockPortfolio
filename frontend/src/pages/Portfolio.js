@@ -113,35 +113,55 @@ const Portfolio = () => {
 
   const updateStockQuantity = async (portfolioStockId) => {
     try {
-        const token = localStorage.getItem('token');
-        const newQuantityValue = editQuantity[portfolioStockId] || 0;
-        const stock = selectedPortfolio.stocks.find(stock => stock.id === portfolioStockId);
-        
-        await API.put(`/portfolios/${selectedPortfolio.id}/update_stock/${portfolioStockId}/`, {
-            stock_symbol: stock.stock.symbol,  // Ensure the stock symbol is sent
-            quantity: newQuantityValue,
-        }, {
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-        });
-        setSelectedPortfolio({
-            ...selectedPortfolio,
-            stocks: selectedPortfolio.stocks.map(stock =>
-                stock.id === portfolioStockId ? { ...stock, quantity: newQuantityValue } : stock
-            ),
-        });
-        setEditQuantity({
-            ...editQuantity,
-            [portfolioStockId]: 0
-        });
+      const token = localStorage.getItem('token');
+      const newQuantityValue = editQuantity[portfolioStockId] || 0;
+      const stock = selectedPortfolio.stocks.find(stock => stock.id === portfolioStockId);
+      
+      await API.put(`/portfolios/${selectedPortfolio.id}/update_stock/${portfolioStockId}/`, {
+        stock_symbol: stock.stock.symbol,
+        quantity: newQuantityValue,
+      }, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      setSelectedPortfolio({
+        ...selectedPortfolio,
+        stocks: selectedPortfolio.stocks.map(stock =>
+          stock.id === portfolioStockId ? { ...stock, quantity: newQuantityValue } : stock
+        ),
+      });
+      setEditQuantity({
+        ...editQuantity,
+        [portfolioStockId]: 0
+      });
     } catch (error) {
-        console.error('Error updating stock quantity', error);
-        if (error.response && error.response.status === 401) {
-            navigate('/login');
-        }
+      console.error('Error updating stock quantity', error);
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
     }
-};
+  };
+
+  const deleteStockFromPortfolio = async (portfolioStockId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await API.delete(`/portfolios/${selectedPortfolio.id}/delete_stock/${portfolioStockId}/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      setSelectedPortfolio({
+        ...selectedPortfolio,
+        stocks: selectedPortfolio.stocks.filter(stock => stock.id !== portfolioStockId),
+      });
+    } catch (error) {
+      console.error('Error deleting stock from portfolio', error);
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
+    }
+  };
 
   const handleEditQuantityChange = (portfolioStockId, value) => {
     setEditQuantity({
@@ -169,6 +189,7 @@ const Portfolio = () => {
             onUpdateQuantity={updateStockQuantity}
             onEditQuantityChange={handleEditQuantityChange}
             editQuantity={editQuantity}
+            onDeleteStock={deleteStockFromPortfolio}
           />
           <StockForm
             stocks={stocks}
@@ -186,6 +207,7 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
+
 
 
 

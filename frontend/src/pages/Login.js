@@ -1,21 +1,38 @@
-import React, { useState } from 'react';
+// frontend/src/pages/Login.js
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import API from '../services/api';
+import { getLocation, getWeather, weatherCodeToDescription } from '../services/WeatherService';
 import './Auth.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [weather, setWeather] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');   
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const locationData = await getLocation();
+        const weatherData = await getWeather(locationData.latitude, locationData.longitude);
+        setWeather(weatherData);
+      } catch (error) {
+        console.error('Error fetching weather data', error);
+      }
+    };
+
+    fetchWeather();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await API.post('/login/', { username, password });
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', username);  // Store username for future use
+      localStorage.setItem('username', username); // Store the username
       navigate(`/portfolio/${username}`);
     } catch (error) {
       console.error('Error logging in', error);
@@ -38,11 +55,21 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
       <p>Don't have an account? <Link to="/register">Register</Link></p>
+      {weather && (
+        <div className="weather-container">
+          <h2>Current Weather</h2>
+          <p>{weather.temperature}°C</p>
+          <p>{weatherCodeToDescription(weather.weathercode)}</p>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Login;
+
+
+
 
 
 

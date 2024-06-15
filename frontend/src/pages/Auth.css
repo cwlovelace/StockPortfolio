@@ -47,3 +47,9 @@
     margin-top: 20px;
   }
   
+  .weather-container {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    text-align: center;
+  }
